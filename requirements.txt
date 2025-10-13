@@ -1,3 +1,5 @@
+numpy
+pytest
 pandas>=1.5
 matplotlib
 openpyxl

@@ -2,11 +2,13 @@
 import os               #gestion des chemins et répertoires
 import pandas as pd          # Pour la manipulation des données tabulaires
 import matplotlib.pyplot as plt  # Pour la génération des graphiques et tableaux
+from pathlib import Path
+from typing import Union
 from matplotlib.axes import Axes
 from matplotlib.backends.backend_pdf import PdfPages
 
 # === DATA LOADING ===
-def load_data(file_path: str, date_col: str, year_col: str, quarter_col: str) -> pd.DataFrame:
+def load_data(file_path: Union[str, Path], date_col: str, year_col: str, quarter_col: str) -> pd.DataFrame:
     """
     Charge un fichier Excel, ajoute les colonnes année et trimestre.
 
@@ -25,7 +27,7 @@ def load_data(file_path: str, date_col: str, year_col: str, quarter_col: str) ->
     Returns:
         pd.DataFrame: DataFrame pandas enrichi
     """
-    df = pd.read_excel(file_path, parse_dates=[date_col])
+    df = pd.read_excel(str(file_path), parse_dates=[date_col])
     df[year_col] = df[date_col].dt.year
     df[quarter_col] = df[date_col].dt.to_period('Q')
     return df
@@ -92,7 +94,7 @@ def groupby_size(df: pd.DataFrame, group_cols: list[str], count_name: str = "COU
 # === TABLE & CHART EXPORT FUNCTIONS ===
 def save_table_image(df: pd.DataFrame, title: str, img_path_or_pdf, max_rows: int = 30) -> None:
     """
-    Sauvegarde un DataFrame sous forme de tableau image (.png ou PDF).
+    Sauvegarde un DataFrame sous forme de tableau image (png ou PDF).
     """
     display_df = df.copy()
     note = ""
