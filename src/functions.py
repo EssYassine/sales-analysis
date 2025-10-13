@@ -1,6 +1,9 @@
-import os
+# === IMPORTS ===
+import os               #gestion des chemins et répertoires
 import pandas as pd          # Pour la manipulation des données tabulaires
 import matplotlib.pyplot as plt  # Pour la génération des graphiques et tableaux
+from matplotlib.axes import Axes
+from matplotlib.backends.backend_pdf import PdfPages
 
 # === DATA LOADING ===
 def load_data(file_path: str, date_col: str, year_col: str, quarter_col: str) -> pd.DataFrame:
@@ -62,14 +65,15 @@ def filter_by_value(df: pd.DataFrame, col: str, value) -> pd.DataFrame:
     Filtre le DataFrame sur une colonne et une valeur donnée.
 
     Params:
-        df (pd.DataFrame): DataFrame source
+        df (DataFrame): DataFrame source
         col (str): colonne à filtrer
         value: valeur à conserver
 
     Returns:
-        pd.DataFrame: DataFrame filtré
+        DataFrame: DataFrame filtré
     """
-    return df[df[col] == value]
+    mask: pd.Series[bool] = df[col] == value
+    return df[mask]
 
 def groupby_size(df: pd.DataFrame, group_cols: list[str], count_name: str = "COUNT") -> pd.DataFrame:
     """
@@ -86,32 +90,30 @@ def groupby_size(df: pd.DataFrame, group_cols: list[str], count_name: str = "COU
     return df.groupby(group_cols).size().reset_index(name=count_name)
 
 # === TABLE & CHART EXPORT FUNCTIONS ===
-def save_table_image(df: pd.DataFrame, title: str, img_path: str, max_rows: int = 30) -> None:
+def save_table_image(df: pd.DataFrame, title: str, img_path_or_pdf, max_rows: int = 30) -> None:
     """
-    Sauvegarde un DataFrame sous forme de tableau image (.png).
-
-    Params:
-        df (pd.DataFrame): DataFrame à afficher
-        title (str): titre du tableau
-        img_path (str): chemin de l'image à sauvegarder
-        max_rows (int): nombre max de lignes affichées
-
-    Returns:
-        None
+    Sauvegarde un DataFrame sous forme de tableau image (.png ou PDF).
     """
     display_df = df.copy()
     note = ""
     if display_df.shape[0] > max_rows:
         display_df = display_df.head(max_rows)
         note = f"Affichage limité à {max_rows} lignes sur {df.shape[0]}."
+
     nrows, ncols = display_df.shape
-    fig_height = min(18, 1.5 + nrows * 0.6)
-    fig_width = min(18, 2.5 + ncols * 1.3)
+    fig_height = min(18.0, 1.5 + nrows * 0.6)
+    fig_width = min(18.0, 2.5 + ncols * 1.3)
+
     fig, ax = plt.subplots(figsize=(fig_width, fig_height))
+    # ax: Axes  # type hint si tu veux calmer le linter
+    ax: Axes
     ax.axis('off')
     ax.set_title(title, fontsize=17, weight='bold', pad=18, color="#2563eb")
+
     if note:
-        ax.text(0.5, 1.02, note, fontsize=11, color='gray', va='center', ha='center', transform=ax.transAxes)
+        ax.text(0.5, 1.02, note,
+                fontsize=11, color='gray', va='center', ha='center', transform=ax.transAxes)
+
     tbl = ax.table(
         cellText=display_df.values,
         colLabels=display_df.columns,
@@ -122,6 +124,7 @@ def save_table_image(df: pd.DataFrame, title: str, img_path: str, max_rows: int 
     tbl.auto_set_font_size(False)
     tbl.set_fontsize(13)
     tbl.scale(1.3, 1.4)
+
     for (row, col), cell in tbl.get_celld().items():
         cell.set_edgecolor('black')
         if row == 0:
@@ -131,25 +134,29 @@ def save_table_image(df: pd.DataFrame, title: str, img_path: str, max_rows: int 
             cell.set_facecolor('#f3f4f6')
         else:
             cell.set_facecolor('white')
+
     for col in range(ncols):
         tbl.auto_set_column_width(col)
+
     plt.tight_layout()
-    os.makedirs(os.path.dirname(img_path), exist_ok=True)
-    fig.savefig(img_path, bbox_inches='tight')
+
+    if isinstance(img_path_or_pdf, PdfPages):
+        img_path_or_pdf.savefig(fig, bbox_inches='tight')
+    else:
+        os.makedirs(os.path.dirname(img_path_or_pdf), exist_ok=True)
+        fig.savefig(img_path_or_pdf, bbox_inches='tight')
+
     plt.close(fig)
 
-def save_histogram_image(df: pd.DataFrame, col: str, title: str, img_path: str) -> None:
+def save_histogram_image(df: pd.DataFrame, col: str, title: str, output, bins=10) -> None:
     """
-    Sauvegarde un histogramme d'une colonne sous forme d'image (.png).
+    Sauvegarde un histogramme soit en image PNG, soit directement dans un PDF (PdfPages).
 
     Params:
         df (pd.DataFrame): DataFrame source
         col (str): colonne à afficher en histogramme
         title (str): titre du graphique
         img_path (str): chemin de l'image à sauvegarder
-
-    Returns:
-        None
     """
     fig, ax = plt.subplots(figsize=(8, 6))
     n, bins, patches = ax.hist(df[col].dropna(), bins=10, color="#2563eb", alpha=0.7, edgecolor="black")
@@ -158,8 +165,32 @@ def save_histogram_image(df: pd.DataFrame, col: str, title: str, img_path: str) 
     ax.set_ylabel('Fréquence', fontsize=13)
     ax.grid(True, linestyle='--', alpha=0.5)
     for i in range(len(n)):
-        ax.text((bins[i]+bins[i+1])/2, n[i], f"{int(n[i])}", ha='center', va='bottom', fontsize=11, color='#334155')
+        ax.text(float((bins[i] + bins[i + 1]) / 2), float(n[i]), f"{int(n[i])}",
+                ha='center', va='bottom', fontsize=11, color='#334155')
     plt.tight_layout()
-    os.makedirs(os.path.dirname(img_path), exist_ok=True)
-    fig.savefig(img_path, bbox_inches='tight')
+    if isinstance(output, str):
+        os.makedirs(os.path.dirname(output), exist_ok=True)
+        fig.savefig(output, bbox_inches="tight")
+    else:
+        output.savefig(fig, bbox_inches="tight")
     plt.close(fig)
+
+def generate_pdf(path: str, dataframes: list[tuple], histograms: list[tuple]):
+    """
+    Génère un PDF unique contenant des tables et histogrammes.
+
+    Params:
+        path (str): chemin complet du PDF à sauvegarder
+        dataframes (list of tuple): liste de tuples (df, title) pour les tables
+        histograms (list of tuple): liste de tuples (df, col, title) pour les histogrammes
+    """
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+
+    with PdfPages(path) as pdf:
+        # Tables
+        for table_df, table_title in dataframes:
+            save_table_image(table_df, table_title, pdf)
+
+        # Histogrammes
+        for hist_df, col_name, hist_title in histograms:
+            save_histogram_image(hist_df, col_name, hist_title, pdf)
