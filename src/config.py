@@ -6,7 +6,7 @@
 # Paramètres génériques pour l'analyse des ventes
 # ==========================
 
-FILE_PATH = "../data/Data_Load.xlsx"      # Chemin du fichier Excel à analyser
+FILE_PATH = "../data/input/Data_Load.xlsx"  # Chemin du fichier Excel à analyser
 
 # Noms de colonnes standards
 SELLER_COL = "SELLER"

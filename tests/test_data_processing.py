@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import pytest
-from src.functions import (
+from src import (
     load_data,
     groupby_aggregate,
     groupby_aggregate_multi,

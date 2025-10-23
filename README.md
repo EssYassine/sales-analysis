@@ -1,86 +1,70 @@
-\# Sales Analysis
+# Sales Analysis
 
 
+## Table of Contents
 
-\## Table of Contents
+- [Overview](#overview)
 
+- [Objectives](#objectives)
 
+- [Structure](#structure)
 
-\- \[Objectives](#objectives)
+- [How to Use](#how-to-use)
 
-\- \[Repository Structure](#repository-structure)
+- [Contributing](#contributing)
 
-\- \[How to Use](#how-to-use)
-
-\- \[Contributing](#contributing)
-
-\- \[License](#license)
-
-\## Project Overview
+- [License](#license)
 
 
+## Overview
 
-`sales-analysis` is a Python project for \*\*analyzing sales data\*\* from an Excel file.  
+`sales-analysis` is a Python project for **analyzing sales data** from an Excel file.  
 
-It automates the creation of \*\*statistical tables\*\* and \*\*visual reports\*\* (PDF, ODF, charts) to answer key business questions about sales performance, including revenue, quantity, and price dispersion.
+It automates the creation of **statistical tables** and **visual reports** (PDF, ODF, charts) to answer key business questions about sales performance, including revenue, quantity, and price dispersion.
 
-
-
-The goal is to provide a \*\*modular, reproducible, and maintainable tool\*\* for data-driven insights on sales.
-
+[Back to Top](#sales-analysis)
 
 
-\[Back to Top](#sales-analysis)
+## Objectives
 
-\## Objectives
-
-
-
-The goal of this project is to provide a \*\*comprehensive and automated framework\*\* for analyzing sales data.  
+The goal is to provide a **modular, reproducible, and maintainable tool** for data-driven insights on sales.
 
 It is designed to help understand sales performance, identify trends, measure productivity of salespeople, and support data-driven decision-making.  
 
-
-
 Specifically, the project enables:
 
+- Aggregation of sales data by various dimensions (time, salesperson, product, etc.)
 
+- Calculation of key performance metrics such as revenue, quantity, and average transaction values
 
-\- Aggregation of sales data by various dimensions (time, salesperson, product, etc.)
+- Identification of patterns, outliers, and variability in sales and pricing
 
-\- Calculation of key performance metrics such as revenue, quantity, and average transaction values
-
-\- Identification of patterns, outliers, and variability in sales and pricing
-
-\- Generation of professional reports and visualizations (PDF, ODF, charts) for stakeholders
-
+- Generation of professional reports and visualizations (PDF, ODF, charts) for stakeholders
 
 
 Some example analyses the project can perform include:
 
+1. Total revenue per year per salesperson (PDF table)  
+
+2. Average revenue per quarter per salesperson (ODF table)  
+
+3. Average quantity sold per transaction per salesperson  
+
+4. Salesperson with the highest unit price dispersion in 2023 (PDF histogram)  
+
+5. Ranking of salespeople in 2025 by average revenue per transaction (PDF table)  
+
+6. Min, max, and average revenue per salesperson over the full period (PDF table)  
+
+7. Salesperson with the highest median revenue in 2023 (PDF table)  
+
+8. Total number of transactions per year per salesperson (PDF histogram)  
 
 
-&nbsp;   1. Total revenue per year per salesperson (PDF table)  
-
-&nbsp;   2. Average revenue per quarter per salesperson (ODF table)  
-
-&nbsp;   3. Average quantity sold per transaction per salesperson  
-
-&nbsp;   4. Salesperson with the highest unit price dispersion in 2023 (PDF histogram)  
-
-&nbsp;   5. Ranking of salespeople in 2025 by average revenue per transaction (PDF table)  
-
-&nbsp;   6. Min, max, and average revenue per salesperson over the full period (PDF table)  
-
-&nbsp;   7. Salesperson with the highest median revenue in 2023 (PDF table)  
-
-&nbsp;   8. Total number of transactions per year per salesperson (PDF histogram)  
+[Back to Top](#sales-analysis)
 
 
-
-\[Back to Top](#sales-analysis)
-
-\## Project Structure
+## Structure
 
 ```bash
 
@@ -102,11 +86,11 @@ sales-analysis/
 
 ├── src/                         # Source code
 
-│   ├── data\_loader.py           # Load and preprocess Excel data
+│   ├── data_loader.py           # Load and preprocess Excel data
 
 │   ├── analysis.py              # Analytical functions
 
-│   ├── report\_generator.py      # Export tables and charts
+│   ├── report_generator.py      # Export tables and charts
 
 │   ├── main.py                  # Main script to run analysis
 
@@ -122,15 +106,12 @@ sales-analysis/
 
 ```
 
+[Back to Top](#sales-analysis)
 
 
-\[Back to Top](#sales-analysis)
+## Installation
 
-\## Installation
-
-
-
-1\. Clone the repository
+1. Clone the repository
 
 ```bash
 
@@ -140,23 +121,23 @@ cd sales-analysis
 
 ```
 
-2\. Create a virtual environment
+2. Create a virtual environment
 
 ```bash
 
 python -m venv .venv
 
-\# Windows
+# Windows
 
-.venv\\Scripts\\activate
+.venvScriptsactivate
 
-\# Linux / macOS
+# Linux / macOS
 
 source .venv/bin/activate
 
 ```
 
-3\. Install dependencies
+3. Install dependencies
 
 ```bash
 
@@ -164,13 +145,10 @@ pip install -r requirements.txt
 
 ```
 
+4. Place your Excel file in the data/ folder (Data_Load.xlsx)
 
 
-4\. Place your Excel file in the data/ folder (Data\_Load.xlsx)
-
-\## Usage
-
-
+## Usage
 
 Run the main script:
 
@@ -180,7 +158,7 @@ python -m src.main
 
 ```
 
-\- Tables (PDF/ODF) and charts will be automatically generated in the output/ folder.
+- Tables (PDF/ODF) and charts will be automatically generated in the output/ folder.
 
-\- Check output/tables/ for tables, output/charts/ for graphs.
+- Check output/tables/ for tables, output/charts/ for graphs.
 

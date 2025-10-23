@@ -1,0 +1,17 @@
+[
+  {
+    "Name":"Alice",
+    "Score":85,
+    "Passed":true
+  },
+  {
+    "Name":"Bob",
+    "Score":72,
+    "Passed":true
+  },
+  {
+    "Name":"Chlo\u00e9",
+    "Score":55,
+    "Passed":false
+  }
+]
